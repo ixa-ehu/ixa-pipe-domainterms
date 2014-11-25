@@ -21,9 +21,10 @@ use Getopt::Std;
 
 my %opts;
 
-my $VERSION="fixme!"; # @@ TODO
+my $VERSION = "1.0.0"; # @@ TODO
+my $SOURCE = "ixa-pipe-domainterms";
 
-getopts('m:D:', \%opts);
+getopts('m:D:j', \%opts);
 
 my $dict_file = $opts{'D'};
 $dict_file = $opts{'D'} unless $dict_file;
@@ -55,7 +56,10 @@ my %POS_MAP = ("^N.*" => 'n',
 open(my $fh_fname, $fname);
 binmode $fh_fname;
 
-my $VOCAB = new Match($dict_file);
+my $dict_format = "txt";
+$dict_format = "json" if $opts{'j'};
+
+my $VOCAB = new Match($dict_file,$dict_format);
 
 my $parser = XML::LibXML->new();
 my $doc;
@@ -144,7 +148,7 @@ sub push_ctx {
 	state $id_n = 0;
 
 	$id_n++;
-	my $id = "mark".$id_n;
+	my $id = "m".$id_n;
 	push @{ $ctx }, { lemma => $tmw->{lemma}, xref => $tmw->{xref}, id=> $id, spanid => $tmw->{spanid} } ;
 }
 
@@ -325,7 +329,7 @@ sub create_markables_layer {
 
 	my $naf_elem = $xmldoc->getDocumentElement;
 	my $markables_elem = $xmldoc->createElement("markables");
-	$markables_elem->setAttribute("source", "ixa-pipes-domainterms"); # TODO: use variable
+	$markables_elem->setAttribute("source", $SOURCE);
 	foreach my $doc ( @{ $docRef } ) {
 		my $ctx = [];
 		foreach my $cw ( @{ $doc } ) {
@@ -343,8 +347,8 @@ sub create_markables_layer {
 			$mark_elem->addChild($span_elem);
 			my $xrefs_elem = $xmldoc->createElement('externalReferences');
 			my $xref_elem = $xmldoc->createElement('externalRef');
-			$xref_elem->setAttribute('resource', "gazeteer"); # TODO: gazeteer name (dict)
-			$xref_elem->setAttribute('reference', $cw->{xref}); # TODO: ID
+			$xref_elem->setAttribute('resource', $dict_file);
+			$xref_elem->setAttribute('reference', $cw->{xref});
 			$xrefs_elem->addChild($xref_elem);
 			$mark_elem->addChild($xrefs_elem);
 			$markables_elem->addChild($mark_elem);
@@ -411,6 +415,6 @@ sub usage {
 	my $str = shift;
 
 	print STDERR $str."\n";
-	die "usage: $0 [-x wsd_executable] [-m pos_mapping_file ] -K kbfile.bin -D dict.txt naf_input.txt [-- wsd_executable_options]\n";
-
+#	die "usage: $0 [-m pos_mapping_file ] -D dict.json [-j] naf_input.txt \n";
+	die "usage: $0 -D dict.json -j naf_input.txt \n";
 }

@@ -39,6 +39,9 @@ use Exporter () ;
 use strict;
 use Encode;
 use DB_File;
+use JSON;
+use utf8;
+binmode STDOUT, ":utf8";
 
 use Carp qw(croak);
 
@@ -60,9 +63,11 @@ sub new {
   croak "Error: must pass dictionary filename"
     unless @_;
   my $fname = $_[0];
+  my $fformat = $_[1];
 
   my $self = {
 	      fname => $fname,
+	      fformat => $fformat,
 	      trie => {}
 	     };
   bless $self, $class;
@@ -195,6 +200,7 @@ sub _match {
   my($words,$i, $lmin) = @_ ;
   my ($string,$k,$length) ;
 
+  
   my $wkey = lc($words->[$i]);
 
   return -1 if ! defined $self->{trie}->{$wkey} ;
@@ -204,7 +210,7 @@ sub _match {
 	  next if ($i+$length) > $#{ $words } ;
 	  my $context = lc(join(" ",  @{$words}[$i+1..$i+$length])) ;
 	  foreach my $entry (@{ $self->{trie}->{$wkey}{$length} }) {
-		  return ($length, $entry->[1], $entry->[2]) if $context eq $entry->[0] ;
+	      return ($length, $entry->[1], $entry->[2]) if $context eq $entry->[0] ;
 	  }
   }
   return -1 ;
@@ -215,25 +221,57 @@ sub _init {
   my ($self) = @_;
 
   my $fname = $self->{fname};
+  my $fformat = $self->{fformat};
 
-  my $fh;
-  if ($fname =~ /\.bz2$/) {
-    open($fh, "-|:encoding(UTF-8)", "bzcat $fname");
-  } else {
-    open($fh, "<:encoding(UTF-8)", "$fname");
-  }
-  # TODO: store gazeteer ID
-  while (<$fh>) {
+  if($fformat eq "txt"){
+      my $fh;
+      if ($fname =~ /\.bz2$/) {
+	  open($fh, "-|:encoding(UTF-8)", "bzcat $fname");
+      } else {
+	  open($fh, "<:encoding(UTF-8)", "$fname");
+      }
+      while (<$fh>) {
 	  chomp;
 	  my $entry = $_;
-	  my ($firstword, @rwords) = split(/[_-\s]+/,lc($entry)) ;
+	  if($entry !~ /\|\|/){
+	      die "ERROR: Malformed dictionary entry\nEntry example: tiempo de reformas||ID-89||CID-445\nIf you are using a JSON format dictionary, add -j parameter\n";
+	  }
+	  my ($words,$id,$classid) = split('\|\|',$entry);
+	  my ($firstword, @rwords) = split(/[_-\s]+/,lc($words));
 	  next unless $firstword;
 	  #next unless @rwords;
 	  my $length = @rwords ;
 	  push @{ $self->{trie}->{$firstword}->{$length} },
-		[join(" ", @rwords), $entry, "TODOID"]
-	}
+	  [join(" ", @rwords), $entry, $classid]
+      }
+  }
+  elsif($fformat eq "json"){
+      my $json_text = do {
+	  my $fh;
+	  if ($fname =~ /\.bz2$/) {
+      	      open (fh, "-|:encoding(UTF-8)", "bzcat $fname")
+		  or die("Can't open \$fname\": $!\n");
+ 	  } else {
+	      open($fh, "<:encoding(UTF-8)", $fname)
+		  or die("Can't open \$fname\": $!\n");
+	  }
+	  local $/;
+	  <$fh>
+      };
+      my $json = JSON->new;
+      my $data = $json->decode($json_text);
+      for my $entry ( @{$data->{data}} ) {
+	  my($firstword,@rwords) = split(/[_-\s]+/,lc($entry->{desc}));
+	  my $id = $entry->{id};
+	  my $classid = $entry->{idclass};
+	  my $length = @rwords ;
+	  push @{ $self->{trie}->{$firstword}->{$length} },
+	  [join(" ", @rwords), $entry, $classid]
+      }
+  }
 }
+
+
 
 sub poss {
 
