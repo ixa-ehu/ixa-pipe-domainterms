@@ -24,9 +24,9 @@ the example below.
 A dictionary file is required. There are two different formats for the
 dictionary file:
 + plain text file: one dictionary entry per line formatted as
-
+```
     dictionary_entry||entry_id||class_id
-
+```
   An entry example is shown here
 
     tiempo de reformas||ID-89||CID-445
