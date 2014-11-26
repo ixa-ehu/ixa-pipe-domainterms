@@ -24,15 +24,15 @@ the example below.
 A dictionary file is required. There are two possible formats for the
 dictionary file:
 
-1. plain text file: one dictionary entry per line formatted as
+- **plain text file**: one dictionary entry per line formatted as
 ```
 dictionary_entry||entry_id||class_id
 ```
 *class_id* could be omitted. An entry example is shown here
 ```
-    tiempo de reformas||ID-89||CID-445
+tiempo de reformas||ID-89||CID-445
 ```
-2. JSON file: a *data* array, which elements have (at least) these
+- *JSON file**: a *data* array, which elements have (at least) these
 elements: *id* and *desc* (dictionary entry name). An example is shown here
 ```
 {"data":[
@@ -44,8 +44,8 @@ elements: *id* and *desc* (dictionary entry name). An example is shown here
 ```
 
 There are several parameters:
-+ **D** (required): specify the dictionary file as parameter.
-+ **j** (optional): use this parameter if the dictionary file is formatted as JSON instead of plain text file.
++ **-D** (required): specify the dictionary file as parameter.
++ **-j** (optional): use this parameter if the dictionary file is formatted as JSON instead of plain text file.
 
 You can call to *ixa-pipe-domainterms* module as follows:
 ```
