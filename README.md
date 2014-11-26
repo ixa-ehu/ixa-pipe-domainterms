@@ -23,17 +23,16 @@ the example below.
 
 A dictionary file is required. There are two possible formats for the
 dictionary file:
-+ plain text file: one dictionary entry per line formatted as
+1. plain text file: one dictionary entry per line formatted as
 ```
 dictionary_entry||entry_id||class_id
 ```
-An entry example is shown here
+*class_id* could be omitted. An entry example is shown here
 
     tiempo de reformas||ID-89||CID-445
 
-+ JSON file: a *data* array, which elements have (at least) these
-elements: *id*, *desc* (dictionary entry name) and *idclass* (id of
-entry's class). An example is shown here
+2. JSON file: a *data* array, which elements have (at least) these
+elements: *id* and *desc* (dictionary entry name). An example is shown here
 ```
 {"data":[
 {"id":"ICD-1-P","desc":"P","idclass":"","nivel":"1"},
