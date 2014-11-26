@@ -242,7 +242,7 @@ sub _init {
 	  #next unless @rwords;
 	  my $length = @rwords ;
 	  push @{ $self->{trie}->{$firstword}->{$length} },
-	  [join(" ", @rwords), $entry, $classid]
+	  [join(" ", @rwords), $entry, $id]
       }
   }
   elsif($fformat eq "json"){
@@ -266,7 +266,7 @@ sub _init {
 	  my $classid = $entry->{idclass};
 	  my $length = @rwords ;
 	  push @{ $self->{trie}->{$firstword}->{$length} },
-	  [join(" ", @rwords), $entry, $classid]
+	  [join(" ", @rwords), $entry, $id]
       }
   }
 }

@@ -5,7 +5,7 @@ specific domain, the *ixa-pipe-domainters* module takes a [NAF
 document](http://wordpress.let.vupr.nl/naf/) containing *wf* and
 *term* elements as input, recognizes terms on the given dictionary,
 and outputs a NAF document with those terms tagged on *markables*
-element (`*<markables source="ixa-pipe-domainterms">*`)
+element (`<markables source="ixa-pipe-domainterms">`)
 
 *ixa-pipe-domainterms* is part of IXA pipes, a [multilingual NLP
 pipeline](http://ixa2.si.ehu.es/ixa-pipes) developed by the [IXA NLP
