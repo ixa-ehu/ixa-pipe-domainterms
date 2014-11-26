@@ -1,6 +1,6 @@
 # ixa-pipe-domainterms
 
-*ixa-pipe-domainterms* is a domain tagger. Given a dictionary for a
+*ixa-pipe-domainterms* is a domain terms tagger. Given a dictionary for a
 specific domain, the *ixa-pipe-domainters* module takes a [NAF
 document](http://wordpress.let.vupr.nl/naf/) containing *wf* and
 *term* elements as input, recognizes terms on the given dictionary,
