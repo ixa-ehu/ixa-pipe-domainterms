@@ -23,6 +23,7 @@ the example below.
 
 A dictionary file is required. There are two possible formats for the
 dictionary file:
+
 1. plain text file: one dictionary entry per line formatted as
 ```
 dictionary_entry||entry_id||class_id
