@@ -29,9 +29,9 @@ dictionary file:
 dictionary_entry||entry_id||class_id
 ```
 *class_id* could be omitted. An entry example is shown here
-
+```
     tiempo de reformas||ID-89||CID-445
-
+```
 2. JSON file: a *data* array, which elements have (at least) these
 elements: *id* and *desc* (dictionary entry name). An example is shown here
 ```
