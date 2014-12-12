@@ -249,7 +249,7 @@ sub _init {
       my $json_text = do {
 	  my $fh;
 	  if ($fname =~ /\.bz2$/) {
-      	      open (fh, "-|:encoding(UTF-8)", "bzcat $fname")
+      	      open ($fh, "-|:encoding(UTF-8)", "bzcat $fname")
 		  or die("Can't open \$fname\": $!\n");
  	  } else {
 	      open($fh, "<:encoding(UTF-8)", $fname)
